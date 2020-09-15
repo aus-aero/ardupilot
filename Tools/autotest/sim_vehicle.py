@@ -22,6 +22,7 @@ import textwrap
 import time
 import shlex
 import binascii
+from flask import request
 
 from pymavlink import mavextra
 from pysim import vehicleinfo
@@ -139,6 +140,18 @@ class CompatOptionParser(optparse.OptionParser):
             opts.ensure_value("mavproxy_args", " ".join(mavproxy_args))
 
         return opts, args
+
+@app.route('/start_sitl')
+def start_sitl:
+    return "start_sitl called!"
+
+@app.route('/stop_sitl')
+def stop_sitl:
+    return "stop_sitl called!"
+
+@app.route('/reset_sitl')
+def reset_sitl:
+    return "reset_sitl called!"
 
 
 def cygwin_pidof(proc_name):
