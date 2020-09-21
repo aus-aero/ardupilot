@@ -6,11 +6,11 @@
 .vagrant
 AntennaTracker
 Rover
-ArduCopter
+# ArduCopter # Don't ignore this
 ArduPlane
 ArduSub
 benchmarks
-build
+# build
 docs
 libraries
 mk
