@@ -1,0 +1,54 @@
+name: Build Exec Container
+
+on:
+  push:
+
+jobs:
+  build-exec-container:
+    runs-on: x64
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v2
+
+    - name: Get the submodules
+      working-directory: .
+      run: git submodule update --init --recursive
+
+    - name: Docker login
+      run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
+      
+    - name: Docker build of the builder container
+      working-directory: .
+      run: docker build . -f Dockerfile -t ardupilot:latest
+
+    - name: Use builder container to build ardupilot
+      working-directory: .
+      run: |
+        docker run --rm -v `pwd`:/ardupilot ardupilot:latest ./waf configure --board=sitl
+        docker run --rm -v `pwd`:/ardupilot ardupilot:latest ./waf build
+
+    - name: Docker local build of aa-sitl-container
+      working-directory: .
+      run: docker build . -f Dockerfile.runner -t aa-sitl-container
+      
+    - name: Tag aa-sitl-container
+      run: |
+        docker tag aa-sitl-container ausaero/ardupilot:${{ github.sha }}
+        docker tag aa-sitl-container ausaero/ardupilot:latest
+
+    - name: Push SITL Container
+      run: |
+        docker push ausaero/ardupilot:${{ github.sha }}
+
+
+    - name: Slack Notification
+      uses: rtCamp/action-slack-notify@v2.0.2
+      env:
+        SLACK_CHANNEL: software-bots
+        SLACK_COLOR: '#3DCD32'
+        SLACK_ICON: https://github.com/rtCamp.png?size=48
+        SLACK_MESSAGE: 'SITL Container Finished Building - ${{ github.sha }}'
+        SLACK_TITLE: SITL Container Finished
+        SLACK_USERNAME: container-bot
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
