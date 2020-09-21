@@ -50,5 +50,5 @@ jobs:
         SLACK_MESSAGE: 'SITL Container Finished Building - ${{ github.sha }}'
         SLACK_TITLE: SITL Container Finished
         SLACK_USERNAME: container-bot
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_WEBHOOK: ${{ secrets.SLACK_SOFTWARE_WEBHOOK }}
 
