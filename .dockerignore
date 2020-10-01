@@ -16,7 +16,7 @@ libraries
 mk
 modules
 tests
-Tools
+Tools # Don't ignore this either
 # autotest directories
 test.*
 terrain
