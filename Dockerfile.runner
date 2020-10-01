@@ -42,7 +42,7 @@ RUN sudo apt-get clean \
 ENV CCACHE_MAXSIZE=1G
 EXPOSE 14550
 WORKDIR /ardupilot
-COPY Tools Tools
+COPY Tools/autotest /ardupilot/Tools/autotest
 ADD ArduCopter ArduCopter
 ADD build build
 ENTRYPOINT ["./Tools/autotest/sim_vehicle.py", "-w", "-v", "ArduCopter", "--no-rebuild", "--no-mavproxy", "-L", "AusAeroHQ"]
