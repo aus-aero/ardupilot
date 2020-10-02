@@ -14,8 +14,13 @@ jobs:
       working-directory: .
       run: git submodule update --init --recursive
 
+
     - name: Docker login
-      run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 565689658834.dkr.ecr.ap-southeast-2.amazonaws.com
       
     - name: Docker build of the builder container
       working-directory: .
@@ -33,12 +38,12 @@ jobs:
       
     - name: Tag aa-sitl-container
       run: |
-        docker tag aa-sitl-container ausaero/ardupilot:${{ github.sha }}
-        docker tag aa-sitl-container ausaero/ardupilot:latest
+        docker tag aa-sitl-container 565689658834.dkr.ecr.ap-southeast-2.amazonaws.com/ausaero/ardupilot:${{ github.sha }}
+        docker tag aa-sitl-container 565689658834.dkr.ecr.ap-southeast-2.amazonaws.com/ausaero/ardupilot:latest
 
     - name: Push SITL Container
       run: |
-        docker push ausaero/ardupilot:${{ github.sha }}
+        docker push 565689658834.dkr.ecr.ap-southeast-2.amazonaws.com/ausaero/ardupilot:${{ github.sha }}
 
 
     - name: Slack Notification
