@@ -41,7 +41,10 @@ RUN sudo apt-get clean \
     && sudo rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ENV CCACHE_MAXSIZE=1G
+
+# Expose ardupilot ports for real and simulated use case
 EXPOSE 14550 5760
+
 # COPY Tools/autotest /ardupilot/Tools/autotest/
 WORKDIR /ardupilot
 COPY ./ArduCopter ArduCopter
