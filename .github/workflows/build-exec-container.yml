@@ -5,7 +5,7 @@ on:
 
 jobs:
   build-exec-container:
-    runs-on: x64
+    runs-on: [x64, self-hosted, linux]
     steps:
     - name: Checkout the repository
       uses: actions/checkout@v2
