@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 
 COPY Tools/environment_install/install-prereqs-ubuntu.sh /ardupilot/Tools/environment_install/
 COPY Tools/completion /ardupilot/Tools/completion/
+COPY Tools/autotest /ardupilot/Tools/autotest/
 
 # Create non root user for pip
 ENV USER=ardupilot
@@ -41,3 +42,11 @@ RUN sudo apt-get clean \
 
 ENV CCACHE_MAXSIZE=1G
 
+# Expose ardupilot ports for real and simulated use case
+# EXPOSE 14550 5760
+
+# COPY Tools/autotest /ardupilot/Tools/autotest/
+WORKDIR /ardupilot
+COPY ./ArduCopter ArduCopter
+COPY ./build build
+ENTRYPOINT ["./Tools/autotest/sim_vehicle.py", "-w", "-v", "ArduCopter", "--no-rebuild", "--no-mavproxy", "-L", "AusAeroHQ"]
